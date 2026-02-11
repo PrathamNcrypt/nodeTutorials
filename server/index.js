@@ -1,28 +1,14 @@
-const http = require("http");
-const fs = require("fs");
-const url = require("url");
+const express = require("express");
 
+const app = express();
 
-const myServer = http.createServer((req, res) => {
-  console.log(req.headers);
-  const log = `${Date.now()}: ${req.url} New Req Received\n`;
-  const myUrl = url.parse(req.url, true);
-  fs.appendFile("log.txt", log, (error, data) => {
-    switch (myUrl.pathname) {
-      case "/":
-        res.end("Homepage");
-        break;
-      case "/about":
-        const username = myUrl.query.myname;
-        res.end(`Hi, ${username}`);
-        break;
-      case "/search":
-        const search = myUrl.query.search_query;
-        res.end(`Here are your search results for ${search}`);
-      default:
-        res.end("404 Not Found");
-    }
-  });
+app.get('/', (req, res)=>{
+  return res.send("Hello from Homepage")
 });
 
-myServer.listen(8000, ()=> console.log("Server Started"));
+app.get("/about" , ( req, res)=>{
+  return res.send("Hello\n" + `${req.query.name}\n`+ "from about page\n");
+});
+
+app.listen(8000, ()=> console.log("Server Started"));
+
